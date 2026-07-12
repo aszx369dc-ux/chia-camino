@@ -124,6 +124,7 @@ function saveDiaryEntries(nextEntries) {
   const serialized = JSON.stringify(nextEntries);
   if (!diarySafeSet(serialized)) return false;
   diaryEntries = nextEntries;
+  if (typeof markCaminoDataChanged === "function") markCaminoDataChanged();
   return true;
 }
 
@@ -286,6 +287,7 @@ diaryElement("#importDiaryJson").addEventListener("change", async event => {
     const imported = validateDiaryEntries(parsed.entries, true);
     if (!diarySafeSet(JSON.stringify(imported))) throw new Error("瀏覽器無法儲存還原資料");
     diaryEntries = imported;
+    if (typeof markCaminoDataChanged === "function") markCaminoDataChanged();
     resetDiaryForm();
     renderDiaryEntries();
     alert("日記備份已驗證並還原。");

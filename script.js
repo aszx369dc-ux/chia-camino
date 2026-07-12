@@ -104,7 +104,18 @@ function loadExpenses() {
 }
 
 function saveExpenses() {
-  return safeSetItem(STORAGE_KEY, JSON.stringify(expenses));
+  const saved = safeSetItem(STORAGE_KEY, JSON.stringify(expenses));
+  if (saved) markCaminoDataChanged();
+  return saved;
+}
+
+function markCaminoDataChanged() {
+  try {
+    localStorage.setItem("chia-camino-last-change-v1", new Date().toISOString());
+  } catch {
+    // The feature-specific save function already reports storage failures.
+  }
+  window.dispatchEvent(new Event("camino:data-changed"));
 }
 
 function isValidDate(value) {
@@ -254,7 +265,7 @@ $("#expenseForm").addEventListener("submit", event => {
 
 $("#budgetLimit").addEventListener("change", event => {
   const budget = validBudget(event.target.value);
-  if (budget !== null) safeSetItem(BUDGET_KEY, String(budget));
+  if (budget !== null && safeSetItem(BUDGET_KEY, String(budget))) markCaminoDataChanged();
   render();
 });
 
@@ -296,6 +307,7 @@ $("#importJson").addEventListener("change", async event => {
 
     expenses = importedExpenses;
     $("#budgetLimit").value = String(importedBudget);
+    markCaminoDataChanged();
     render();
     alert(isLegacy ? "舊版記帳資料已驗證並還原；預算沿用目前設定。" : "記帳資料與預算已還原。");
   } catch (error) {

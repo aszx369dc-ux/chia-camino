@@ -19,6 +19,7 @@
         <a href="#today">今日行程</a>
         <a href="#expense">旅行記帳</a>
         <a href="#diary">日記</a>
+        <a href="#dataSafety">資料安全</a>
         <a href="#emergency">緊急資訊</a>
       </nav>
     </div>
@@ -39,6 +40,31 @@
         <article><span>返程</span><strong>8/19 馬德里</strong><small>8/20 抵達台灣</small></article>
       </div>
       <p class="privacy-note">這個公開頁面只保留行程概況，不包含護照號碼、訂位代號、住宿完整地址或私人文件。</p>
+    </section>
+
+    <section id="dataSafety" class="section-card safety-card">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">DATA SAFETY</p>
+          <h2>旅行資料安全中心</h2>
+        </div>
+        <span id="backupStatus" class="backup-status">🔴 立即備份</span>
+      </div>
+
+      <div class="safety-grid">
+        <article><span>最後備份時間</span><strong id="lastBackupTime">尚未備份</strong></article>
+        <article><span>距離今天</span><strong id="backupAge">—</strong></article>
+        <article><span>今天新增支出</span><strong id="todayExpenseStatus">否</strong></article>
+        <article><span>今天新增日記</span><strong id="todayDiaryStatus">否</strong></article>
+      </div>
+
+      <p id="unbackedNotice" class="unbacked-notice" hidden>今天有尚未備份的資料</p>
+      <div class="toolbar safety-actions">
+        <button id="backupTravelData" class="primary-button" type="button">💾 備份旅行資料</button>
+        <label class="file-button">還原旅行資料<input id="restoreTravelData" type="file" accept="application/json,.json" /></label>
+      </div>
+      <p class="local-note">整合備份會同時包含目前瀏覽器中的支出、預算與日記。還原前會顯示現有資料筆數並要求再次確認。</p>
+      <p id="safetyMessage" class="app-message" role="status" aria-live="polite" hidden></p>
     </section>
 
     <section id="expense" class="section-card">
@@ -206,5 +232,6 @@
   <footer><p>Buen Camino, Chia.</p></footer>
   <script src="script.js"></script>
   <script src="diary.js"></script>
+  <script src="security.js"></script>
 </body>
 </html>

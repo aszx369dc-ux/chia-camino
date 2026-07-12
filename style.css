@@ -51,6 +51,14 @@ textarea { width: 100%; resize: vertical; }
 .app-message, .public-data-warning { padding: 10px 12px; border-radius: 11px; font-size: .88rem; }
 .app-message { margin: 0 0 16px; color: var(--danger); background: #f8e5e2; }
 .public-data-warning { margin: -8px 0 18px; color: #71332e; background: #f8e5e2; }
+.safety-card { border-top: 6px solid var(--green); }
+.backup-status { flex: 0 0 auto; padding: 8px 12px; border-radius: 999px; background: #efe9dc; font-size: .88rem; font-weight: 800; }
+.safety-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.safety-grid article { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+.safety-grid span { display: block; color: var(--muted); font-size: .8rem; }
+.safety-grid strong { display: block; margin-top: 4px; overflow-wrap: anywhere; font-size: 1.05rem; }
+.unbacked-notice { margin: 14px 0 0; padding: 10px 12px; border-radius: 11px; color: #71332e; background: #f8e5e2; font-weight: 700; }
+.safety-actions .primary-button { padding: 9px 15px; }
 .category-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
 .category-chip { padding: 7px 10px; border-radius: 999px; background: #efe9dc; font-size: .82rem; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
@@ -93,6 +101,7 @@ footer { padding: 20px 0 42px; text-align: center; color: var(--muted); }
   .trip-grid, .stats-grid, .emergency-grid { grid-template-columns: 1fr 1fr; }
   .expense-form { grid-template-columns: 1fr 1fr; }
   .expense-form .primary-button { grid-column: 1 / -1; }
+  .safety-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 500px) {
   .trip-grid, .stats-grid, .emergency-grid, .expense-form { grid-template-columns: 1fr; }
@@ -100,4 +109,5 @@ footer { padding: 20px 0 42px; text-align: center; color: var(--muted); }
   .budget-control select { width: 100%; }
   th:nth-child(2), td:nth-child(2), th:nth-child(4), td:nth-child(4) { display: none; }
   .diary-form, .diary-detail-grid { grid-template-columns: 1fr; }
+  .safety-grid { grid-template-columns: 1fr; }
 }
