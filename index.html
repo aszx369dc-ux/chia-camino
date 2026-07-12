@@ -22,6 +22,10 @@
         <a href="#dataSafety">資料安全</a>
         <a href="#emergency">緊急資訊</a>
       </nav>
+      <div id="networkStatus" class="network-status" role="status" aria-live="polite">
+        <strong id="networkStatusTitle">🌐 已連線</strong>
+        <span id="networkStatusDetail" hidden>目前沒有網路，支出與日記仍會儲存在這支裝置。</span>
+      </div>
     </div>
   </header>
 
@@ -65,6 +69,75 @@
       </div>
       <p class="local-note">整合備份會同時包含目前瀏覽器中的支出、預算與日記。還原前會顯示現有資料筆數並要求再次確認。</p>
       <p id="safetyMessage" class="app-message" role="status" aria-live="polite" hidden></p>
+    </section>
+
+    <section id="quickRecord" class="section-card quick-record-card">
+      <details id="quickRecordPanel">
+        <summary>
+          <span class="kicker">QUICK RECORD</span>
+          <strong>🌙 今日快速紀錄</strong>
+          <small>開始今天的紀錄</small>
+        </summary>
+
+        <form id="quickRecordForm" class="quick-record-form">
+          <fieldset>
+            <legend>今日基本資訊</legend>
+            <div class="quick-fields">
+              <label>日期<input id="quickDate" type="date" required /></label>
+              <label>Day 編號<input id="quickDay" type="number" min="1" max="999" step="1" inputmode="numeric" required /></label>
+              <label>起點<input id="quickStart" type="text" maxlength="80" required /></label>
+              <label>終點<input id="quickEnd" type="text" maxlength="80" required /></label>
+              <label>今日公里數<input id="quickDistance" type="number" min="0" max="200" step="0.1" inputmode="decimal" required /></label>
+              <label>今日心情
+                <select id="quickMood" required>
+                  <option value="😀 開心">😀 開心</option>
+                  <option value="😌 平靜">😌 平靜</option>
+                  <option value="🤩 驚喜">🤩 驚喜</option>
+                  <option value="😭 難過">😭 難過</option>
+                  <option value="😤 挫折">😤 挫折</option>
+                  <option value="😴 疲憊">😴 疲憊</option>
+                </select>
+              </label>
+              <label>天氣
+                <select id="quickWeather" required>
+                  <option value="晴天">晴天</option>
+                  <option value="陰天">陰天</option>
+                  <option value="下雨">下雨</option>
+                  <option value="炎熱">炎熱</option>
+                  <option value="寒冷">寒冷</option>
+                  <option value="強風">強風</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>今日支出</legend>
+            <div class="quick-fields quick-expenses">
+              <label>住宿<input id="quickLodging" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+              <label>餐飲<input id="quickFood" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+              <label>超市／補給<input id="quickSupplies" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+              <label>咖啡<input id="quickCoffee" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+              <label>交通<input id="quickTransport" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+              <label>其他<input id="quickOther" type="number" min="0" step="1" inputmode="numeric" placeholder="可留空" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>今日文字紀錄</legend>
+            <div class="quick-text-fields">
+              <label>今天遇見的人<textarea id="quickPeople" maxlength="500" rows="2"></textarea></label>
+              <label>今天最值得記住的事<textarea id="quickEvents" maxlength="2000" rows="4"></textarea></label>
+              <label>今天最深刻的一句話<textarea id="quickQuote" maxlength="300" rows="2"></textarea></label>
+              <label>給明天的自己<textarea id="quickTomorrow" maxlength="1000" rows="3"></textarea></label>
+              <label>自由日記<textarea id="quickContent" maxlength="5000" rows="6"></textarea></label>
+            </div>
+          </fieldset>
+
+          <button id="completeToday" class="primary-button complete-today" type="submit">完成今天</button>
+        </form>
+      </details>
+      <p id="quickRecordMessage" class="quick-record-message" role="status" aria-live="polite" hidden></p>
     </section>
 
     <section id="expense" class="section-card">
@@ -233,5 +306,6 @@
   <script src="script.js"></script>
   <script src="diary.js"></script>
   <script src="security.js"></script>
+  <script src="quick.js"></script>
 </body>
 </html>
