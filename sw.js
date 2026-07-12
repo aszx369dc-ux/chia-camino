@@ -1,6 +1,6 @@
-const CACHE = "chia-camino-v2";
+const CACHE = "chia-camino-v3";
 const HOME = self.registration.scope;
-const FILES = ["./", "index.html", "style.css", "script.js", "manifest.json"];
+const FILES = ["./", "index.html", "style.css", "script.js", "diary.js", "manifest.json"];
 
 self.addEventListener("install", event => {
   event.waitUntil(

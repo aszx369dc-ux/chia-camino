@@ -18,6 +18,7 @@
       <nav class="quick-nav" aria-label="主要導覽">
         <a href="#today">今日行程</a>
         <a href="#expense">旅行記帳</a>
+        <a href="#diary">日記</a>
         <a href="#emergency">緊急資訊</a>
       </nav>
     </div>
@@ -114,6 +115,64 @@
       <p class="local-note">記帳資料只儲存在這台裝置的瀏覽器，不會上傳到 GitHub。請定期按「備份 JSON」，避免換手機、清除瀏覽器資料或使用無痕模式後遺失。</p>
     </section>
 
+    <section id="diary" class="section-card">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">PILGRIM DIARY</p>
+          <h2>每日朝聖日記</h2>
+        </div>
+      </div>
+
+      <p class="local-note diary-privacy">日記只儲存在這個瀏覽器的 localStorage，不會上傳到 GitHub，也不會自動顯示給其他訪客。請定期備份，以免清除瀏覽器資料後遺失。</p>
+
+      <form id="diaryForm" class="diary-form">
+        <input id="diaryEditId" type="hidden" />
+        <label>日期<input id="diaryDate" type="date" required /></label>
+        <label>Day 編號<input id="diaryDay" type="number" min="1" max="999" step="1" placeholder="例如：3" required /></label>
+        <label>起點<input id="diaryStart" type="text" maxlength="80" required /></label>
+        <label>終點<input id="diaryEnd" type="text" maxlength="80" required /></label>
+        <label>今日公里數<input id="diaryDistance" type="number" min="0" max="200" step="0.1" inputmode="decimal" required /></label>
+        <label>今日心情
+          <select id="diaryMood" required>
+            <option value="😀 開心">😀 開心</option>
+            <option value="😌 平靜">😌 平靜</option>
+            <option value="🤩 驚喜">🤩 驚喜</option>
+            <option value="😭 難過">😭 難過</option>
+            <option value="😤 挫折">😤 挫折</option>
+            <option value="😴 疲憊">😴 疲憊</option>
+          </select>
+        </label>
+        <label>天氣
+          <select id="diaryWeather" required>
+            <option value="晴天">晴天</option>
+            <option value="陰天">陰天</option>
+            <option value="下雨">下雨</option>
+            <option value="炎熱">炎熱</option>
+            <option value="寒冷">寒冷</option>
+            <option value="強風">強風</option>
+          </select>
+        </label>
+        <label class="diary-wide">今日遇見的人<textarea id="diaryPeople" maxlength="500" rows="3"></textarea></label>
+        <label class="diary-wide">今日發生的事<textarea id="diaryEvents" maxlength="2000" rows="5"></textarea></label>
+        <label class="diary-wide">今天最深刻的一句話<textarea id="diaryQuote" maxlength="300" rows="2"></textarea></label>
+        <label class="diary-wide">給明天的自己<textarea id="diaryTomorrow" maxlength="1000" rows="3"></textarea></label>
+        <label class="diary-wide">自由日記內容<textarea id="diaryContent" maxlength="5000" rows="8"></textarea></label>
+        <div class="diary-form-actions diary-wide">
+          <button id="diarySubmit" class="primary-button" type="submit">儲存日記</button>
+          <button id="diaryCancelEdit" type="button" hidden>取消編輯</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <button id="exportDiaryJson" type="button">備份日記 JSON</button>
+        <label class="file-button">還原日記 JSON<input id="importDiaryJson" type="file" accept="application/json,.json" /></label>
+        <button id="exportDiaryMarkdown" type="button">匯出日記 Markdown</button>
+      </div>
+
+      <p id="diaryMessage" class="app-message" role="status" aria-live="polite" hidden></p>
+      <div id="diaryEntries" class="diary-entries"></div>
+    </section>
+
     <section id="emergency" class="section-card emergency-card">
       <div class="section-heading">
         <div><p class="kicker">EMERGENCY</p><h2>緊急求助資訊</h2></div>
@@ -146,5 +205,6 @@
 
   <footer><p>Buen Camino, Chia.</p></footer>
   <script src="script.js"></script>
+  <script src="diary.js"></script>
 </body>
 </html>
