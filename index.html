@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f5f4a" />
+  <meta name="description" content="CHIA 的西班牙朝聖之路行動首頁與旅行記帳工具" />
+  <title>CHIA Camino 2026</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="shell">
+      <p class="eyebrow">CAMINO DE SANTIAGO · 2026</p>
+      <h1>CHIA 的朝聖之路</h1>
+      <p class="hero-copy">從 Bilbao 出發，沿著北方之路走進未知，也把一路上的支出、故事與重要資訊好好收著。</p>
+      <nav class="quick-nav" aria-label="主要導覽">
+        <a href="#today">今日行程</a>
+        <a href="#expense">旅行記帳</a>
+        <a href="#emergency">緊急資訊</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="today" class="section-card">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">JOURNEY</p>
+          <h2>旅程概要</h2>
+        </div>
+      </div>
+      <div class="trip-grid">
+        <article><span>出發</span><strong>7/13 台北</strong><small>經阿布達比前往馬德里</small></article>
+        <article><span>抵達</span><strong>7/14 馬德里</strong><small>轉乘 ALSA 前往 Bilbao</small></article>
+        <article><span>路線</span><strong>Camino del Norte</strong><small>預計銜接原始之路</small></article>
+        <article><span>返程</span><strong>8/19 馬德里</strong><small>8/20 抵達台灣</small></article>
+      </div>
+      <p class="privacy-note">這個公開頁面只保留行程概況，不包含護照號碼、訂位代號、住宿完整地址或私人文件。</p>
+    </section>
+
+    <section id="expense" class="section-card">
+      <div class="section-heading budget-heading">
+        <div>
+          <p class="kicker">TRAVEL BUDGET</p>
+          <h2>每日旅行記帳</h2>
+        </div>
+        <label class="budget-control">
+          預算上限
+          <select id="budgetLimit" aria-label="選擇預算上限">
+            <option value="60000">NT$60,000</option>
+            <option value="70000">NT$70,000</option>
+            <option value="80000" selected>NT$80,000</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="stats-grid">
+        <article><span>目前累計</span><strong id="totalSpent">NT$0</strong></article>
+        <article><span>剩餘預算</span><strong id="remainingBudget">NT$0</strong></article>
+        <article><span>旅途中日均可用</span><strong id="dailyAllowance">NT$0</strong></article>
+      </div>
+
+      <div class="progress-wrap" aria-label="預算使用進度">
+        <div class="progress-label"><span id="budgetPercent">已使用 0%</span><span id="budgetStatus">預算充足</span></div>
+        <div class="progress-track"><div id="budgetBar" class="progress-bar"></div></div>
+      </div>
+
+      <form id="expenseForm" class="expense-form">
+        <label>日期<input id="expenseDate" type="date" required /></label>
+        <label>類別
+          <select id="expenseCategory" required>
+            <option value="住宿">住宿</option>
+            <option value="交通">交通</option>
+            <option value="餐飲">餐飲</option>
+            <option value="補給">補給</option>
+            <option value="醫療">醫療</option>
+            <option value="觀光">觀光</option>
+            <option value="保險">保險</option>
+            <option value="其他">其他</option>
+          </select>
+        </label>
+        <label>項目<input id="expenseItem" type="text" maxlength="50" placeholder="例如：朝聖者旅館" required /></label>
+        <label>金額（新台幣）<input id="expenseAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="750" required /></label>
+        <label>付款方式
+          <select id="paymentMethod">
+            <option value="現金">現金</option>
+            <option value="信用卡">信用卡</option>
+            <option value="金融卡">金融卡</option>
+            <option value="其他">其他</option>
+          </select>
+        </label>
+        <label>備註<input id="expenseNote" type="text" maxlength="80" placeholder="可留白" /></label>
+        <button class="primary-button" type="submit">＋ 新增支出</button>
+      </form>
+
+      <div class="toolbar">
+        <button id="exportCsv" type="button">匯出 CSV</button>
+        <button id="exportJson" type="button">備份 JSON</button>
+        <label class="file-button">還原 JSON<input id="importJson" type="file" accept="application/json" /></label>
+      </div>
+
+      <p id="appMessage" class="app-message" role="status" aria-live="polite" hidden></p>
+
+      <div class="category-summary" id="categorySummary"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>日期</th><th>類別</th><th>項目</th><th>付款</th><th class="money">金額</th><th></th></tr></thead>
+          <tbody id="expenseRows"></tbody>
+        </table>
+      </div>
+      <p class="local-note">記帳資料只儲存在這台裝置的瀏覽器，不會上傳到 GitHub。請定期按「備份 JSON」，避免換手機、清除瀏覽器資料或使用無痕模式後遺失。</p>
+    </section>
+
+    <section id="emergency" class="section-card emergency-card">
+      <div class="section-heading">
+        <div><p class="kicker">EMERGENCY</p><h2>緊急求助資訊</h2></div>
+        <a class="call-112" href="tel:112">撥打 112</a>
+      </div>
+      <p class="public-data-warning"><strong>此頁包含公開緊急資料。</strong>任何能開啟本網站的人都可以看到以下內容。</p>
+      <div class="emergency-grid">
+        <article>
+          <h3>本人資料</h3>
+          <p><strong>LIN, CHIA-HAO</strong><br />Taiwan · Blood Type O</p>
+          <p>Allergies: None<br />Current medications: None<br />Chronic conditions: None</p>
+        </article>
+        <article>
+          <h3>旅遊保險</h3>
+          <p>Fubon Insurance</p>
+          <a href="tel:+886225636292">24-hour assistance<br />+886-2-2563-6292</a>
+        </article>
+        <article>
+          <h3>緊急聯絡</h3>
+          <p>Primary contact: Mother</p>
+          <a href="tel:+886918915655">+886 918-915-655</a>
+        </article>
+      </div>
+      <details>
+        <summary>給救援人員看的英文說明</summary>
+        <p>If I am injured, unconscious, or unable to communicate, please contact my emergency contact or the travel insurance assistance number shown above. Thank you for your help.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer><p>Buen Camino, Chia.</p></footer>
+  <script src="script.js"></script>
+</body>
+</html>

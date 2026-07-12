@@ -1,0 +1,8 @@
+{
+  "name": "CHIA Camino 2026",
+  "short_name": "Camino",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2eee3",
+  "theme_color": "#1f5f4a"
+}
