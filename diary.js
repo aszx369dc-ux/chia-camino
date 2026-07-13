@@ -53,7 +53,7 @@ function diarySafeSet(value) {
     localStorage.setItem(DIARY_STORAGE_KEY, value);
     return true;
   } catch {
-    showDiaryMessage("無法將日記儲存到這個瀏覽器。請確認隱私設定或可用儲存空間。");
+    showDiaryMessage("照片或日記資料太大，無法儲存在此裝置。請先備份，或改用較小的照片。");
     return false;
   }
 }
@@ -100,7 +100,8 @@ function validateDiaryEntries(value, regenerateIds) {
       events: diaryValidateText(entry, "events", `${label}今日發生的事`),
       quote: diaryValidateText(entry, "quote", `${label}最深刻的一句話`),
       tomorrow: diaryValidateText(entry, "tomorrow", `${label}給明天的自己`),
-      content: diaryValidateText(entry, "content", `${label}自由日記`)
+      content: diaryValidateText(entry, "content", `${label}自由日記`),
+      photo: validateDiaryPhoto(entry.photo, `${label}照片`)
     };
   });
 }
@@ -122,6 +123,11 @@ function loadDiaryEntries() {
 
 function saveDiaryEntries(nextEntries) {
   const serialized = JSON.stringify(nextEntries);
+  const estimatedBytes = serializedByteSize(serialized);
+  if (estimatedBytes > DIARY_STORAGE_WARNING_BYTES) {
+    showDiaryMessage("照片或日記資料太大，無法儲存在此裝置。請先備份，或改用較小的照片。");
+    return false;
+  }
   if (!diarySafeSet(serialized)) return false;
   diaryEntries = nextEntries;
   if (typeof markCaminoDataChanged === "function") markCaminoDataChanged();
@@ -146,7 +152,7 @@ function renderDiaryEntries() {
   if (!sorted.length) {
     const empty = document.createElement("p");
     empty.className = "diary-empty";
-    empty.textContent = "今天走了什麼？遇見了誰？留下幾句就好。";
+    empty.textContent = "還沒有旅行日誌。完成今天的紀錄後，它會出現在這裡。";
     container.append(empty);
     return;
   }
@@ -161,7 +167,17 @@ function renderDiaryEntries() {
     const meta = document.createElement("span");
     meta.className = "diary-summary-meta";
     meta.textContent = `${entry.start} → ${entry.end} · ${entry.distance} km · ${entry.mood}`;
-    summary.append(title, meta);
+    const summaryText = document.createElement("span");
+    summaryText.className = "diary-summary-text";
+    summaryText.append(title, meta);
+    summary.append(summaryText);
+    if (entry.photo) {
+      const thumbnail = document.createElement("img");
+      thumbnail.className = "diary-thumbnail";
+      thumbnail.src = validateDiaryPhoto(entry.photo).dataUrl;
+      thumbnail.alt = "此篇日記的照片縮圖";
+      summary.append(thumbnail);
+    }
 
     const detail = document.createElement("div");
     detail.className = "diary-detail";
@@ -174,6 +190,17 @@ function renderDiaryEntries() {
     appendDiaryField(grid, "今天最深刻的一句話", entry.quote);
     appendDiaryField(grid, "給明天的自己", entry.tomorrow);
     appendDiaryField(grid, "日記", entry.content);
+    if (entry.photo) {
+      const photoSection = document.createElement("section");
+      photoSection.className = "diary-field diary-field-wide diary-photo-detail";
+      const heading = document.createElement("h3");
+      heading.textContent = "今天的一張照片";
+      const photo = document.createElement("img");
+      photo.src = validateDiaryPhoto(entry.photo).dataUrl;
+      photo.alt = `Day ${entry.day} 日記照片`;
+      photoSection.append(heading, photo);
+      grid.append(photoSection);
+    }
 
     const actions = document.createElement("div");
     actions.className = "diary-card-actions";
@@ -181,7 +208,7 @@ function renderDiaryEntries() {
     editButton.type = "button";
     editButton.dataset.id = entry.id;
     editButton.textContent = "編輯";
-    editButton.addEventListener("click", () => beginDiaryEdit(editButton.dataset.id));
+    editButton.addEventListener("click", () => beginTodayRecordEdit(editButton.dataset.id));
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "diary-delete";
@@ -195,81 +222,15 @@ function renderDiaryEntries() {
   });
 }
 
-function diaryFormEntry() {
-  return {
-    id: diaryElement("#diaryEditId").value || diaryCreateId(),
-    date: diaryElement("#diaryDate").value,
-    day: Number(diaryElement("#diaryDay").value),
-    start: diaryElement("#diaryStart").value,
-    end: diaryElement("#diaryEnd").value,
-    distance: Number(diaryElement("#diaryDistance").value),
-    mood: diaryElement("#diaryMood").value,
-    weather: diaryElement("#diaryWeather").value,
-    people: diaryElement("#diaryPeople").value,
-    events: diaryElement("#diaryEvents").value,
-    quote: diaryElement("#diaryQuote").value,
-    tomorrow: diaryElement("#diaryTomorrow").value,
-    content: diaryElement("#diaryContent").value
-  };
-}
-
-function resetDiaryForm() {
-  diaryElement("#diaryForm").reset();
-  diaryElement("#diaryEditId").value = "";
-  diaryElement("#diaryDate").valueAsDate = new Date();
-  diaryElement("#diarySubmit").textContent = "儲存日記";
-  diaryElement("#diaryCancelEdit").hidden = true;
-}
-
-function beginDiaryEdit(id) {
-  const entry = diaryEntries.find(item => item.id === id);
-  if (!entry) return;
-  diaryElement("#diaryEditId").value = entry.id;
-  diaryElement("#diaryDate").value = entry.date;
-  diaryElement("#diaryDay").value = String(entry.day);
-  diaryElement("#diaryStart").value = entry.start;
-  diaryElement("#diaryEnd").value = entry.end;
-  diaryElement("#diaryDistance").value = String(entry.distance);
-  diaryElement("#diaryMood").value = entry.mood;
-  diaryElement("#diaryWeather").value = entry.weather;
-  diaryElement("#diaryPeople").value = entry.people;
-  diaryElement("#diaryEvents").value = entry.events;
-  diaryElement("#diaryQuote").value = entry.quote;
-  diaryElement("#diaryTomorrow").value = entry.tomorrow;
-  diaryElement("#diaryContent").value = entry.content;
-  diaryElement("#diarySubmit").textContent = "更新日記";
-  diaryElement("#diaryCancelEdit").hidden = false;
-  diaryElement("#diaryForm").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
 function deleteDiaryEntry(id) {
   const entry = diaryEntries.find(item => item.id === id);
   if (!entry || !confirm(`確定刪除 Day ${entry.day} 的日記嗎？`)) return;
   const nextEntries = diaryEntries.filter(item => item.id !== id);
   if (saveDiaryEntries(nextEntries)) {
-    if (diaryElement("#diaryEditId").value === id) resetDiaryForm();
+    if (typeof cancelTodayRecordEdit === "function") cancelTodayRecordEdit(id);
     renderDiaryEntries();
   }
 }
-
-diaryElement("#diaryForm").addEventListener("submit", event => {
-  event.preventDefault();
-  try {
-    const entry = validateDiaryEntries([diaryFormEntry()], false)[0];
-    const editingId = diaryElement("#diaryEditId").value;
-    const nextEntries = editingId
-      ? diaryEntries.map(item => item.id === editingId ? entry : item)
-      : [...diaryEntries, entry];
-    if (saveDiaryEntries(nextEntries)) {
-      resetDiaryForm();
-      renderDiaryEntries();
-    }
-  } catch (error) {
-    showDiaryMessage(error instanceof Error ? error.message : "日記格式無效");
-  }
-});
-
-diaryElement("#diaryCancelEdit").addEventListener("click", resetDiaryForm);
 
 diaryElement("#exportDiaryJson").addEventListener("click", () => {
   const backup = { version: DIARY_BACKUP_VERSION, type: DIARY_BACKUP_TYPE, entries: diaryEntries };
@@ -285,10 +246,13 @@ diaryElement("#importDiaryJson").addEventListener("change", async event => {
     if (parsed.version !== DIARY_BACKUP_VERSION) throw new Error("備份版本不受支援");
     if (parsed.type !== DIARY_BACKUP_TYPE) throw new Error("這不是 Camino 日記備份");
     const imported = validateDiaryEntries(parsed.entries, true);
-    if (!diarySafeSet(JSON.stringify(imported))) throw new Error("瀏覽器無法儲存還原資料");
+    const serialized = JSON.stringify(imported);
+    if (serializedByteSize(serialized) > DIARY_STORAGE_WARNING_BYTES || !diarySafeSet(serialized)) {
+      throw new Error("照片或日記資料太大，無法儲存在此裝置。請先備份，或改用較小的照片");
+    }
     diaryEntries = imported;
     if (typeof markCaminoDataChanged === "function") markCaminoDataChanged();
-    resetDiaryForm();
+    if (typeof resetTodayRecordForm === "function") resetTodayRecordForm();
     renderDiaryEntries();
     alert("日記備份已驗證並還原。");
   } catch (error) {
@@ -310,6 +274,7 @@ function diaryMarkdown() {
       `**公里數：** ${entry.distance} km  `,
       `**心情：** ${entry.mood}  `,
       `**天氣：** ${entry.weather}  `,
+      entry.photo ? "**照片：** 此篇日記包含一張照片（照片保存在 JSON 備份中）  " : "",
       diaryMarkdownSection("今日遇見的人", entry.people),
       diaryMarkdownSection("今日發生的事", entry.events),
       diaryMarkdownSection("今天最深刻的一句話", entry.quote),
@@ -335,5 +300,4 @@ function diaryDownload(filename, content, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-resetDiaryForm();
 renderDiaryEntries();

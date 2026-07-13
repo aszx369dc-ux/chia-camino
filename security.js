@@ -118,10 +118,14 @@ function safetyRestoreStorage(nextExpenses, nextBudget, nextDiary, backedUpAt) {
   const keys = [STORAGE_KEY, BUDGET_KEY, DIARY_STORAGE_KEY, LAST_BACKUP_KEY, LAST_CHANGE_KEY];
   const previous = new Map();
   try {
+    const serializedExpenses = JSON.stringify(nextExpenses);
+    const serializedDiary = JSON.stringify(nextDiary);
+    const estimatedBytes = serializedByteSize(serializedExpenses) + serializedByteSize(serializedDiary);
+    if (estimatedBytes > DIARY_STORAGE_WARNING_BYTES) throw new Error("restore-too-large");
     keys.forEach(key => previous.set(key, localStorage.getItem(key)));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextExpenses));
+    localStorage.setItem(STORAGE_KEY, serializedExpenses);
     localStorage.setItem(BUDGET_KEY, String(nextBudget));
-    localStorage.setItem(DIARY_STORAGE_KEY, JSON.stringify(nextDiary));
+    localStorage.setItem(DIARY_STORAGE_KEY, serializedDiary);
     localStorage.setItem(LAST_BACKUP_KEY, backedUpAt);
     localStorage.setItem(LAST_CHANGE_KEY, backedUpAt);
     return true;
@@ -135,7 +139,7 @@ function safetyRestoreStorage(nextExpenses, nextBudget, nextDiary, backedUpAt) {
     } catch {
       // Storage access is unavailable; keep the current in-memory data unchanged.
     }
-    safetyShowMessage("無法完整寫入還原資料，因此未套用這份備份。");
+    safetyShowMessage("照片或日記資料太大，無法儲存在此裝置。請先備份，或改用較小的照片。");
     return false;
   }
 }
@@ -165,7 +169,7 @@ safetyElement("#restoreTravelData").addEventListener("change", async event => {
     expenses = restoredExpenses;
     diaryEntries = restoredDiary;
     safetyElement("#budgetLimit").value = String(restoredBudget);
-    resetDiaryForm();
+    if (typeof resetTodayRecordForm === "function") resetTodayRecordForm();
     render();
     renderDiaryEntries();
     renderSafetyCenter();

@@ -62,22 +62,33 @@ textarea { width: 100%; resize: vertical; }
 .safety-grid strong { display: block; margin-top: 4px; overflow-wrap: anywhere; font-size: 1.05rem; }
 .unbacked-notice { margin: 14px 0 0; padding: 10px 12px; border-radius: 11px; color: #71332e; background: #f8e5e2; font-weight: 700; }
 .safety-actions .primary-button { padding: 9px 15px; }
-.quick-record-card > details { margin: 0; padding: 0; background: transparent; }
-.quick-record-card > details > summary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 18px; cursor: pointer; list-style: none; }
-.quick-record-card > details > summary::-webkit-details-marker { display: none; }
-.quick-record-card > details > summary::after { content: "展開"; grid-column: 2; grid-row: 1 / span 3; padding: 7px 11px; border-radius: 999px; color: var(--green); background: var(--green-light); font-size: .8rem; font-weight: 800; }
-.quick-record-card > details[open] > summary::after { content: "收合"; }
-.quick-record-card > details > summary .kicker { margin: 0; }
-.quick-record-card > details > summary strong { font-size: clamp(1.4rem, 4vw, 2rem); }
-.quick-record-card > details > summary small { color: var(--muted); }
-.quick-record-form { display: grid; gap: 16px; margin-top: 24px; }
-.quick-record-form fieldset { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #faf7ef; }
-.quick-record-form legend { padding: 0 7px; color: var(--green); font-weight: 800; }
-.quick-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
-.quick-fields label, .quick-text-fields label { display: grid; gap: 5px; color: #395248; font-size: .82rem; font-weight: 700; }
-.quick-text-fields { display: grid; gap: 11px; }
-.complete-today { width: min(100%, 320px); min-height: 50px; justify-self: center; padding: 11px 22px; font-size: 1.05rem; font-weight: 800; }
-.quick-record-message { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; color: var(--ink); background: var(--green-light); white-space: pre-line; }
+.today-record-card > details { margin: 0; padding: 0; background: transparent; }
+.today-record-card > details > summary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 18px; cursor: pointer; list-style: none; }
+.today-record-card > details > summary::-webkit-details-marker { display: none; }
+.today-record-card > details > summary::after { content: "展開"; grid-column: 2; grid-row: 1 / span 3; padding: 7px 11px; border-radius: 999px; color: var(--green); background: var(--green-light); font-size: .8rem; font-weight: 800; }
+.today-record-card > details[open] > summary::after { content: "收合"; }
+.today-record-card > details > summary .kicker { margin: 0; }
+.today-record-card > details > summary strong { font-size: clamp(1.4rem, 4vw, 2rem); }
+.today-record-card > details > summary small { max-width: 620px; color: var(--muted); }
+.today-record-form { display: grid; gap: 16px; margin-top: 24px; }
+.today-record-form fieldset { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #faf7ef; }
+.today-record-form legend { padding: 0 7px; color: var(--green); font-weight: 800; }
+.today-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+.today-fields label, .today-text-fields label { display: grid; gap: 5px; color: #395248; font-size: .82rem; font-weight: 700; }
+.today-text-fields { display: grid; gap: 11px; }
+.photo-fieldset { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #faf7ef; }
+.photo-fieldset legend { padding: 0 7px; color: var(--green); font-weight: 800; }
+.photo-fieldset > input { width: 100%; background: #fff; }
+.photo-preview-wrap { margin-top: 12px; }
+.photo-preview { display: block; width: min(100%, 420px); max-height: 320px; border-radius: 14px; object-fit: contain; background: #fff; }
+.photo-preview-wrap button { margin-top: 8px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 9px; color: var(--danger); background: #fff; cursor: pointer; }
+.photo-status { min-height: 1.4em; margin: 8px 0 0; color: var(--green); font-size: .84rem; }
+.photo-help { margin: 4px 0 0; color: var(--muted); font-size: .8rem; font-weight: 400; }
+.today-edit-status { margin: 0; padding: 10px 12px; border-radius: 11px; color: var(--green); background: var(--green-light); font-weight: 800; }
+.today-record-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 9px; }
+.complete-today { width: min(100%, 320px); min-height: 50px; padding: 11px 22px; font-size: 1.05rem; font-weight: 800; }
+#cancelTodayEdit { min-height: 50px; padding: 11px 18px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: #fff; cursor: pointer; }
+.today-record-message { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; color: var(--ink); background: var(--green-light); white-space: pre-line; }
 .category-summary { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
 .category-chip { padding: 7px 10px; border-radius: 999px; background: #efe9dc; font-size: .82rem; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
@@ -87,24 +98,21 @@ th { color: var(--muted); font-size: .78rem; background: #faf7ef; }
 .money { text-align: right; }
 .delete-button { border: 0; color: var(--danger); background: transparent; cursor: pointer; }
 .diary-privacy { margin: -8px 0 20px; }
-.diary-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 18px; border-radius: 18px; background: var(--green-light); }
-.diary-form label { display: grid; align-content: start; gap: 5px; color: #395248; font-size: .82rem; font-weight: 700; }
-.diary-wide { grid-column: 1 / -1; }
-.diary-form-actions { display: flex; flex-wrap: wrap; gap: 9px; }
-.diary-form-actions button { min-height: 45px; padding: 9px 15px; border-radius: 12px; cursor: pointer; }
-.diary-form-actions #diaryCancelEdit { border: 1px solid var(--line); background: #fff; color: var(--ink); }
 .diary-entries { display: grid; gap: 12px; margin-top: 16px; }
 .diary-empty { margin: 6px 0 0; padding: 24px; border: 1px dashed #cfc8b7; border-radius: 16px; color: var(--muted); text-align: center; }
 .diary-card { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
-.diary-card summary { padding: 16px 18px; cursor: pointer; list-style-position: inside; }
+.diary-card summary { display: flex; align-items: center; gap: 10px; min-height: 92px; padding: 12px 18px; cursor: pointer; list-style-position: inside; }
+.diary-summary-text { flex: 1; min-width: 0; }
 .diary-summary-title { display: inline; margin-left: 6px; font-weight: 800; }
 .diary-summary-meta { display: block; margin: 5px 0 0 24px; color: var(--muted); font-size: .88rem; }
+.diary-thumbnail { flex: 0 0 88px; width: 88px; height: 66px; border-radius: 10px; object-fit: cover; }
 .diary-detail { padding: 0 18px 18px; }
 .diary-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .diary-field { min-width: 0; padding: 12px; border-radius: 12px; background: #f8f5ed; }
 .diary-field-wide { grid-column: 1 / -1; }
 .diary-field h3 { margin: 0 0 5px; color: var(--muted); font-size: .8rem; }
 .diary-field p { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.diary-photo-detail img { display: block; width: auto; max-width: 100%; height: auto; max-height: 760px; border-radius: 14px; }
 .diary-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 .diary-card-actions button { padding: 7px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fff; cursor: pointer; }
 .diary-card-actions .diary-delete { color: var(--danger); }
@@ -121,16 +129,19 @@ footer { padding: 20px 0 42px; text-align: center; color: var(--muted); }
   .expense-form { grid-template-columns: 1fr 1fr; }
   .expense-form .primary-button { grid-column: 1 / -1; }
   .safety-grid { grid-template-columns: 1fr 1fr; }
-  .quick-fields { grid-template-columns: 1fr 1fr; }
+  .today-fields { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 500px) {
   .trip-grid, .stats-grid, .emergency-grid, .expense-form { grid-template-columns: 1fr; }
   .section-heading { align-items: stretch; flex-direction: column; }
   .budget-control select { width: 100%; }
   th:nth-child(2), td:nth-child(2), th:nth-child(4), td:nth-child(4) { display: none; }
-  .diary-form, .diary-detail-grid { grid-template-columns: 1fr; }
+  .diary-detail-grid { grid-template-columns: 1fr; }
   .safety-grid { grid-template-columns: 1fr; }
-  .quick-fields { grid-template-columns: 1fr; }
-  .quick-record-card > details > summary { grid-template-columns: 1fr; }
-  .quick-record-card > details > summary::after { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
+  .today-fields { grid-template-columns: 1fr; }
+  .today-record-card > details > summary { grid-template-columns: 1fr; }
+  .today-record-card > details > summary::after { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
+  .diary-card summary { align-items: flex-start; }
+  .diary-summary-meta { margin-left: 0; }
+  .diary-thumbnail { flex-basis: 72px; width: 72px; height: 58px; }
 }
